@@ -1,0 +1,8 @@
+{
+  "name": "SIPETIK Lite",
+  "description": "Aplikasi manajemen sapi sederhana untuk peternak kecil dan penggemukan sapi skala kecil.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
