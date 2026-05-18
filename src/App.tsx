@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { supabase } from '@/src/lib/supabase';
 import { useAppStore } from '@/src/store/useAppStore';
 import { Toaster } from '@/src/components/ui/sonner';
@@ -72,6 +73,7 @@ export default function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      <Analytics />
       <Toaster position="top-right" />
     </BrowserRouter>
   );
