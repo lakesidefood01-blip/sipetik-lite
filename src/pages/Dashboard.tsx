@@ -141,18 +141,19 @@ export default function Dashboard() {
           }
         });
 
-        // Growth Chart Data (Last 7 days avg)
-        const last7Days = Array.from({ length: 7 }).map((_, i) => {
-          const d = new Date();
-          d.setDate(d.getDate() - (6 - i));
-          return d.toLocaleDateString('id-ID', { weekday: 'short' });
+        // Growth Chart Data from weights
+        const dailyWeights: Record<string, { total: number, count: number }> = {};
+        weights?.forEach(w => {
+          const date = new Date(w.tanggal_timbang).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+          if (!dailyWeights[date]) dailyWeights[date] = { total: 0, count: 0 };
+          dailyWeights[date].total += w.berat;
+          dailyWeights[date].count += 1;
         });
 
-        // Mocking growth curve shape based on actual data if exists
-        const growthChart = last7Days.map((day, i) => ({
-          name: day,
-          weight: 400 + (i * 10) + (Math.random() * 5) // Simplified logic for trend
-        }));
+        const growthChart = Object.keys(dailyWeights).map(date => ({
+          name: date,
+          weight: Math.round(dailyWeights[date].total / dailyWeights[date].count)
+        })).slice(-7); 
 
         // Weekly Feed
         const weeklyFeed = finances
