@@ -114,13 +114,13 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-              <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
-                <Beef className="h-5 w-5" />
-              </div>
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
-                SIPETIK<span className="text-slate-900 font-light text-lg">Lite</span>
-              </span>
+            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+              <img 
+                src="https://ztgqya2roxgxvefy.public.blob.vercel-storage.com/Logo%20Sipetik%20%284000%20x%202000%20px%29.png" 
+                alt="Logo SIPETIK" 
+                className="h-10 w-auto object-contain"
+                referrerPolicy="no-referrer"
+              />
             </div>
 
             {/* Desktop Navigation */}
@@ -153,6 +153,7 @@ export default function Landing() {
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 text-slate-600 hover:text-emerald-600 focus:outline-none"
+                aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
               >
                 {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -211,8 +212,11 @@ export default function Landing() {
         </AnimatePresence>
       </nav>
 
-      {/* HERO SECTION */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-white via-emerald-50/20 to-slate-50 overflow-hidden">
+      {/* MAIN CONTENT LANDMARK */}
+      <main id="main-content">
+
+        {/* HERO SECTION */}
+        <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-white via-emerald-50/20 to-slate-50 overflow-hidden">
         {/* Subtle decorative background patterns */}
         <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none -mr-72 -mt-32"></div>
         <div className="absolute top-1/2 left-0 w-[30rem] h-[30rem] bg-sky-500/5 rounded-full blur-[120px] pointer-events-none -ml-48"></div>
@@ -397,7 +401,7 @@ export default function Landing() {
                   <Wallet className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Feed Expenses</p>
+                  <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Feed Expenses</p>
                   <p className="text-sm font-extrabold text-slate-800">Rp 120.000 /hr</p>
                 </div>
               </motion.div>
@@ -412,7 +416,7 @@ export default function Landing() {
                   <HeartPulse className="h-5 w-5 animate-pulse" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Kesehatan Sapi</p>
+                  <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Kesehatan Sapi</p>
                   <p className="text-sm font-extrabold text-slate-800">Tepat Waktu ✓</p>
                 </div>
               </motion.div>
@@ -427,7 +431,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Keuntungan SIPETIK</h2>
+            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Keuntungan SIPETIK</h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Efisien, Cerdas & Menguntungkan</p>
             <p className="text-slate-500">Membantu peternakan beralih dari pencatatan tradisional yang berisiko berantakan ke sistem digital yang rapi dan terukur.</p>
           </div>
@@ -458,7 +462,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-20">
-            <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Fitur Unggulan</h2>
+            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Fitur Unggulan</h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Semua Fitur Manajemen yang Anda Butuhkan</p>
             <p className="text-slate-500">Kami membuat peternakan modern menjadi sederhana dengan menyediakan solusi penuh dalam satu genggaman tangan.</p>
           </div>
@@ -492,7 +496,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Demo Antarmuka</h2>
+            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Demo Antarmuka</h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Lihat Cara Kerja SIPETIK Lite</p>
             <p className="text-slate-500">Berikut adalah screenshoot rancangan modul UI aplikasi modern kami yang dirancang responsive untuk layar browser ataupun mobile.</p>
           </div>
@@ -525,7 +529,7 @@ export default function Landing() {
               <div className="w-3 h-3 rounded-full bg-rose-500"></div>
               <div className="w-3 h-3 rounded-full bg-amber-500"></div>
               <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span className="text-[10px] text-slate-500 font-mono ml-4">https://sipetik-lite/app/{previewTab}</span>
+              <span className="text-[10px] text-slate-350 font-mono ml-4">https://sipetik-lite/app/{previewTab}</span>
             </div>
 
             <div className="bg-slate-900 rounded-xl overflow-hidden min-h-[400px]">
@@ -541,7 +545,7 @@ export default function Landing() {
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
-                        <h4 className="text-xl font-extrabold text-white">Dashboard Monitoring 📊</h4>
+                        <h3 className="text-xl font-extrabold text-white">Dashboard Monitoring 📊</h3>
                         <p className="text-xs text-slate-400">Ringkasan kondisi peternakan saat ini.</p>
                       </div>
                       <div className="bg-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-400">21 Mei 2026</div>
@@ -555,9 +559,9 @@ export default function Landing() {
                         { label: "Vaksin / Vitamin", value: "3 Jadwal", trend: "Jadwal terdekat", color: "border-rose-500/20 bg-rose-500/5 text-rose-400" }
                       ].map((item, i) => (
                         <div key={i} className={`p-4 rounded-xl border ${item.color}`}>
-                          <p className="text-[10px] uppercase font-bold opacity-70">{item.label}</p>
+                          <p className="text-[10px] uppercase font-bold text-slate-200 tracking-wide">{item.label}</p>
                           <p className="text-xl font-black mt-1">{item.value}</p>
-                          <p className="text-[10px] mt-2 opacity-80">{item.trend}</p>
+                          <p className="text-[10px] mt-2 text-slate-300 font-medium">{item.trend}</p>
                         </div>
                       ))}
                     </div>
@@ -616,7 +620,7 @@ export default function Landing() {
                   >
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
                       <div>
-                        <h4 className="text-xl font-extrabold text-white">Manajemen Database Sapi 🐂</h4>
+                        <h3 className="text-xl font-extrabold text-white">Manajemen Database Sapi 🐂</h3>
                         <p className="text-xs text-slate-400">Total populasi yang terintegrasi di peternakan.</p>
                       </div>
                       <Button variant="outline" className="gap-2 bg-emerald-600/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-600 hover:text-white rounded-xl">
@@ -662,7 +666,7 @@ export default function Landing() {
                   >
                     <div className="flex justify-between items-center border-b border-slate-800 pb-4">
                       <div>
-                        <h4 className="text-xl font-extrabold text-white">Log Pemberian Pakan Harian 🥦</h4>
+                        <h3 className="text-xl font-extrabold text-white">Log Pemberian Pakan Harian 🥦</h3>
                         <p className="text-xs text-slate-400">Kelola ransum, nutrisi, dan kalkulasi pengeluaran pakan harian sapi.</p>
                       </div>
                     </div>
@@ -725,7 +729,7 @@ export default function Landing() {
                   >
                     <div className="flex justify-between items-center border-b border-slate-800 pb-4">
                       <div>
-                        <h4 className="text-xl font-extrabold text-white">Laporan Keuangan & Rugi Laba 💰</h4>
+                        <h3 className="text-xl font-extrabold text-white">Laporan Keuangan & Rugi Laba 💰</h3>
                         <p className="text-xs text-slate-400">Pencatatan kas otomatis untuk melacak margin laba Anda.</p>
                       </div>
                     </div>
@@ -808,25 +812,25 @@ export default function Landing() {
             <div className="lg:col-span-6 grid grid-cols-2 gap-4">
               <div className="bg-slate-800/40 border border-slate-800 rounded-3xl p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
                 <span className="text-xs font-bold text-slate-400">01 / MOBILITAS</span>
-                <h4 className="font-black text-lg text-white">Bisa Dipakai di Lapangan</h4>
+                <h3 className="font-black text-lg text-white">Bisa Dipakai di Lapangan</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">Dirancang ringan dan responsif, sangat pas untuk diisi langsung saat sedang di kandang melalui smartphone.</p>
               </div>
 
               <div className="bg-slate-800/40 border border-slate-800 rounded-3xl p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300 translate-y-6">
                 <span className="text-xs font-bold text-slate-400">02 / INTERKONEKSI</span>
-                <h4 className="font-black text-lg text-white">Full Database Realtime</h4>
+                <h3 className="font-black text-lg text-white">Full Database Realtime</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">Terhubung secara kokoh dengan backend Supabase Database agar data sinkron seketika di semua perangkat Anda.</p>
               </div>
 
               <div className="bg-slate-800/40 border border-slate-800 rounded-3xl p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
                 <span className="text-xs font-bold text-slate-400">03 / ANALITIK</span>
-                <h4 className="font-black text-lg text-white">Laporan Ekspor Otomatis</h4>
+                <h3 className="font-black text-lg text-white">Laporan Ekspor Otomatis</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">Pantau grafik ADG harian, total margin keuntungan, dan evaluasi operasional pakan bulanan secara teratur.</p>
               </div>
 
               <div className="bg-slate-800/40 border border-slate-800 rounded-3xl p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300 translate-y-6">
                 <span className="text-xs font-bold text-slate-400">04 / INTERFACES</span>
-                <h4 className="font-black text-lg text-white">UI Modern & Bersih</h4>
+                <h3 className="font-black text-lg text-white">UI Modern & Bersih</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">Tema elegan modern bernuansa segar yang nyaman dibaca berlama-lama tanpa membuat mata cepat lelah.</p>
               </div>
             </div>
@@ -882,20 +886,22 @@ export default function Landing() {
 
         </div>
       </section>
+      
+      </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-16">
+      <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-slate-800 pb-12">
             <div className="space-y-4 md:col-span-2">
-              <div className="flex items-center gap-2">
-                <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg">
-                  <Beef className="h-5 w-5" />
-                </div>
-                <span className="font-extrabold text-xl tracking-tight text-white">
-                  SIPETIK<span className="text-emerald-500 font-light text-lg">Lite</span>
-                </span>
+              <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                <img 
+                  src="https://ztgqya2roxgxvefy.public.blob.vercel-storage.com/Logo%20Sipetik%20%284000%20x%202000%20px%29.png" 
+                  alt="Logo SIPETIK" 
+                  className="h-11 w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
                 Aplikasi manajemen peternakan sapi untuk mencatat pakan harian, mengawasi kesehatan, dan meneliti berat sapi secara terintegrasi dan informatif.
@@ -925,8 +931,8 @@ export default function Landing() {
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
             <p className="text-slate-500">© 2026 SIPETIK Lite. Hak Cipta Dilindungi Undang-Undang.</p>
             <div className="flex gap-6 text-slate-500">
-              <span className="hover:text-slate-400 cursor-pointer">Syarat & Ketentuan</span>
-              <span className="hover:text-slate-400 cursor-pointer">Kebijakan Privasi</span>
+              <span className="hover:text-white cursor-pointer transition-colors">Syarat & Ketentuan</span>
+              <span className="hover:text-white cursor-pointer transition-colors">Kebijakan Privasi</span>
             </div>
           </div>
 
