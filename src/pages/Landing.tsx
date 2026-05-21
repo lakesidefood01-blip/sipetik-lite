@@ -915,9 +915,9 @@ export default function Landing() {
             <div>
               <span className="font-bold text-xs text-slate-300 uppercase block tracking-widest mb-4">Kontak & Info</span>
               <ul className="space-y-2.5 text-sm">
-                <li><span className="block text-slate-400">Email: support@sipetik-lite.com</span></li>
-                <li><span className="block text-slate-400">Saluran Layanan: +62 812-3456-7890</span></li>
-                <li><span className="block text-slate-400">Indonesia, Daerah Istimewa Yogyakarta</span></li>
+                <li><span className="block text-slate-400"><strong>Email:</strong> support@sipetik-lite.my.id</span></li>
+                <li><span className="block text-slate-400"><strong>No Telp:</strong> 082127753082</span></li>
+                <li><span className="block text-slate-400"><strong>Alamat:</strong> Jln. Semeru no 15A Kel. Magetan, Kec. Magetan, Kab. Magetan, Jawa Timur 63319</span></li>
               </ul>
             </div>
           </div>
