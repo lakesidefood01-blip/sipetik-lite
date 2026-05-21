@@ -9,7 +9,7 @@ import {
 import { cn } from '@/src/lib/utils';
 
 const mobileItems = [
-  { icon: LayoutDashboard, label: 'Beranda', path: '/' },
+  { icon: LayoutDashboard, label: 'Beranda', path: '/dashboard' },
   { icon: Beef, label: 'Sapi', path: '/sapi' },
   { icon: UtensilsCrossed, label: 'Pakan', path: '/pakan' },
   { icon: Scale, label: 'Berat', path: '/berat' },

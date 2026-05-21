@@ -5,6 +5,7 @@ import { useAppStore } from '@/src/store/useAppStore';
 import { Toaster } from '@/src/components/ui/sonner';
 
 // Pages
+import Landing from '@/src/pages/Landing';
 import Login from '@/src/pages/Login';
 import Register from '@/src/pages/Register';
 import Dashboard from '@/src/pages/Dashboard';
@@ -52,12 +53,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/register" element={!user ? <Register /> : <Navigate to="/dashboard" />} />
 
         {/* Protected Routes */}
         <Route element={user ? <AppLayout /> : <Navigate to="/login" />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/sapi" element={<SapiList />} />
           <Route path="/sapi/new" element={<SapiForm />} />
           <Route path="/sapi/edit/:id" element={<SapiForm />} />

@@ -17,7 +17,7 @@ import { Button } from '@/src/components/ui/button';
 import { supabase } from '@/src/lib/supabase';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Beef, label: 'Data Sapi', path: '/sapi' },
   { icon: UtensilsCrossed, label: 'Pakan Harian', path: '/pakan' },
   { icon: Scale, label: 'Timbang Sapi', path: '/berat' },

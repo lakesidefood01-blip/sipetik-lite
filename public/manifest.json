@@ -1,0 +1,21 @@
+{
+  "short_name": "SIPETIKLite",
+  "name": "SIPETIK Lite — Manajemen Data Sapi",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1546445317-29f4545e6d51?q=80&w=192&auto=format&fit=crop",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1546445317-29f4545e6d51?q=80&w=512&auto=format&fit=crop",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "display": "standalone",
+  "orientation": "portrait"
+}

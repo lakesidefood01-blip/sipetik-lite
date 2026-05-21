@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Disallow: /dashboard*
+Disallow: /sapi*
+Disallow: /pakan*
+Disallow: /berat*
+Disallow: /keuangan*
+Disallow: /kesehatan*
+Disallow: /settings*
+
+Sitemap: https://sipetik-lite.com/sitemap.xml
