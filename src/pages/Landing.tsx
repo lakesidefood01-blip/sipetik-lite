@@ -897,7 +897,7 @@ export default function Landing() {
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
                 <img 
-                  src="https://ztgqya2roxgxvefy.public.blob.vercel-storage.com/Logo%20Sipetik%20%284000%20x%202000%20px%29.png" 
+                  src="https://ztgqya2roxgxvefy.public.blob.vercel-storage.com/logo%20sipetik%20transparent/Logo%20Sipetik%20%284000%20x%202000%20px%29%20%281%29.png" 
                   alt="Logo SIPETIK" 
                   className="h-11 w-auto object-contain"
                   referrerPolicy="no-referrer"
