@@ -127,6 +127,7 @@ export default function Landing() {
             <div className="hidden md:flex items-center gap-8 font-medium text-slate-600 text-sm">
               <button onClick={() => scrollToSection('features')} className="hover:text-emerald-600 transition-colors cursor-pointer">Fitur</button>
               <button onClick={() => scrollToSection('why-us')} className="hover:text-emerald-600 transition-colors cursor-pointer">Keunggulan</button>
+              <button onClick={() => navigate('/pricing')} className="hover:text-emerald-600 transition-colors cursor-pointer">Pricing</button>
               <button onClick={() => scrollToSection('preview')} className="hover:text-emerald-600 transition-colors cursor-pointer">Demo Aplikasi</button>
             </div>
 
@@ -183,6 +184,12 @@ export default function Landing() {
                   className="block w-full text-left py-2 text-slate-600 hover:text-emerald-600 font-medium border-b border-slate-50"
                 >
                   Keunggulan
+                </button>
+                <button 
+                  onClick={() => navigate('/pricing')} 
+                  className="block w-full text-left py-2 text-slate-600 hover:text-emerald-600 font-medium border-b border-slate-50"
+                >
+                  Pricing
                 </button>
                 <button 
                   onClick={() => scrollToSection('preview')} 

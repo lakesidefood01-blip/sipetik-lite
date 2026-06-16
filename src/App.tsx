@@ -17,6 +17,10 @@ const Berat = lazy(() => import('@/src/pages/Berat'));
 const Keuangan = lazy(() => import('@/src/pages/Keuangan'));
 const Kesehatan = lazy(() => import('@/src/pages/Kesehatan'));
 const Settings = lazy(() => import('@/src/pages/Settings'));
+const Pricing = lazy(() => import('@/src/pages/Pricing'));
+const Billing = lazy(() => import('@/src/pages/Billing'));
+const BillingSuccess = lazy(() => import('@/src/pages/BillingSuccess'));
+const BillingFailed = lazy(() => import('@/src/pages/BillingFailed'));
 
 // Layout
 import AppLayout from '@/src/components/layout/AppLayout';
@@ -34,24 +38,45 @@ function PerformancePageLoader() {
 }
 
 export default function App() {
-  const { setUser, user } = useAppStore();
+  const { setUser, user, setProfile } = useAppStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchProfileData = async (sessionUser: any) => {
+      if (!sessionUser) {
+        setProfile(null);
+        return;
+      }
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', sessionUser.id)
+          .single();
+        if (!error && data) {
+          setProfile(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile', err);
+      }
+    };
+
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) fetchProfileData(session.user);
       setLoading(false);
     });
 
     // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      fetchProfileData(session?.user);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, [setUser]);
+  }, [setUser, setProfile]);
 
   if (loading) {
     return (
@@ -70,6 +95,7 @@ export default function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
           <Route path="/register" element={!user ? <Register /> : <Navigate to="/dashboard" />} />
 
@@ -84,6 +110,9 @@ export default function App() {
             <Route path="/berat" element={<Berat />} />
             <Route path="/keuangan" element={<Keuangan />} />
             <Route path="/kesehatan" element={<Kesehatan />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/billing/success" element={<BillingSuccess />} />
+            <Route path="/billing/failed" element={<BillingFailed />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
 

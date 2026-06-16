@@ -7,6 +7,7 @@ import {
   Wallet, 
   HeartPulse, 
   Settings,
+  ReceiptText,
   LogOut,
   ChevronLeft,
   ChevronRight
@@ -23,6 +24,7 @@ const menuItems = [
   { icon: Scale, label: 'Timbang Sapi', path: '/berat' },
   { icon: Wallet, label: 'Keuangan', path: '/keuangan' },
   { icon: HeartPulse, label: 'Kesehatan', path: '/kesehatan' },
+  { icon: ReceiptText, label: 'Langganan', path: '/billing' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 

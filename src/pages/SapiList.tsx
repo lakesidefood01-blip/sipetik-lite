@@ -32,13 +32,16 @@ import { Badge } from '@/src/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { canCreateCow } from '@/src/lib/subscription';
+import UpgradeModal from '@/src/components/UpgradeModal';
 
 export default function SapiList() {
-  const { user } = useAppStore();
+  const { user, profile } = useAppStore();
   const navigate = useNavigate();
   const [sapi, setSapi] = useState<Sapi[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const fetchSapi = async () => {
     if (!user) return;
@@ -80,14 +83,27 @@ export default function SapiList() {
     }
   };
 
+  const handleAddSapi = () => {
+    if (!canCreateCow(profile, sapi.length)) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    navigate('/sapi/new');
+  };
+
   return (
     <div className="space-y-6">
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)} 
+        message="Anda telah mencapai batas maksimal 3 sapi pada paket Gratis. Upgrade ke SIPETIK Pro untuk menambah sapi tanpa batas."
+      />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Master Data Sapi</h1>
           <p className="text-muted-foreground">Kelola semua daftar sapi Anda di sini.</p>
         </div>
-        <Button onClick={() => navigate('/sapi/new')} className="gap-2">
+        <Button onClick={handleAddSapi} className="gap-2">
           <Plus className="h-4 w-4" /> Tambah Sapi
         </Button>
       </div>

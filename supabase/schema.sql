@@ -118,3 +118,27 @@ $$ language 'plpgsql';
 
 CREATE TRIGGER update_sapi_updated_at BEFORE UPDATE ON sapi FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+-- 7. Subscriptions & Billing
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS plan_type TEXT DEFAULT 'free' CHECK (plan_type IN ('free', 'pro')),
+ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'active',
+ADD COLUMN IF NOT EXISTS subscription_started_at TIMESTAMP WITH TIME ZONE,
+ADD COLUMN IF NOT EXISTS subscription_expired_at TIMESTAMP WITH TIME ZONE,
+ADD COLUMN IF NOT EXISTS mayar_customer_id TEXT;
+
+CREATE TABLE IF NOT EXISTS subscriptions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  plan_name TEXT NOT NULL,
+  amount NUMERIC NOT NULL,
+  status TEXT NOT NULL,
+  payment_provider TEXT,
+  external_payment_id TEXT,
+  started_at TIMESTAMP WITH TIME ZONE,
+  expired_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view their own subscriptions" ON subscriptions FOR SELECT USING (auth.uid() = user_id);

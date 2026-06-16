@@ -10,11 +10,13 @@ import {
 } from '@/src/components/ui/dropdown-menu';
 import { supabase } from '@/src/lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, User, Bell } from 'lucide-react';
+import { LogOut, User, Bell, ReceiptText, Settings, Beef } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { Badge } from '@/src/components/ui/badge';
+import { isActiveProPlan } from '@/src/lib/subscription';
 
 export default function Header() {
-  const { user } = useAppStore();
+  const { user, profile } = useAppStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -31,9 +33,14 @@ export default function Header() {
       </div>
       
       <div className="hidden md:block">
-        <h2 className="text-lg font-semibold capitalize">
-          Selamat Datang, {user?.email?.split('@')[0]}
-        </h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold capitalize">
+            Selamat Datang, {user?.email?.split('@')[0]}
+          </h2>
+          <Badge variant={isActiveProPlan(profile) ? "default" : "secondary"} className={isActiveProPlan(profile) ? "bg-emerald-600 hover:bg-emerald-700" : ""}>
+             {isActiveProPlan(profile) ? 'PRO' : 'FREE'}
+          </Badge>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
@@ -69,6 +76,10 @@ export default function Header() {
               <Settings className="mr-2 h-4 w-4" />
               <span>Pengaturan</span>
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/billing')}>
+              <ReceiptText className="mr-2 h-4 w-4" />
+              <span>Langganan</span>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-red-500 hover:text-red-600 hover:bg-red-50">
               <LogOut className="mr-2 h-4 w-4" />
@@ -80,5 +91,3 @@ export default function Header() {
     </header>
   );
 }
-
-import { Beef, Settings } from 'lucide-react';

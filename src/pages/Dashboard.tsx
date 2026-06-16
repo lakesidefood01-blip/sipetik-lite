@@ -9,7 +9,8 @@ import {
   Utensils, 
   Plus, 
   Activity,
-  HeartPulse
+  HeartPulse,
+  Download
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -28,11 +29,14 @@ import { Button } from '@/src/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency, cn } from '@/src/lib/utils';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { canExportPdf } from '@/src/lib/subscription';
+import UpgradeModal from '@/src/components/UpgradeModal';
 
 export default function Dashboard() {
-  const { user } = useAppStore();
+  const { user, profile } = useAppStore();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [stats, setStats] = useState({
     totalSapi: 0,
     totalExpenses: 0,
@@ -209,11 +213,30 @@ export default function Dashboard() {
     );
   }
 
+  const handleExportPdf = () => {
+    if (!canExportPdf(profile)) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    // Dummy action for export PDF
+    alert('Export PDF dimulai...');
+  };
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Ringkasan Peternakan</h1>
-        <p className="text-muted-foreground">Update terakhir: {new Date().toLocaleDateString('id-ID')}</p>
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)} 
+        message="Fitur Ekspor Laporan Eksklusif hanya tersedia untuk paket Pro."
+      />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Ringkasan Peternakan</h1>
+          <p className="text-muted-foreground">Update terakhir: {new Date().toLocaleDateString('id-ID')}</p>
+        </div>
+        <Button onClick={handleExportPdf} variant="outline" className="gap-2 shrink-0 border-emerald-500 text-emerald-600 hover:bg-emerald-50">
+          <Download className="h-4 w-4" /> Cetak Laporan PDF
+        </Button>
       </div>
 
       {/* Stats Grid */}
