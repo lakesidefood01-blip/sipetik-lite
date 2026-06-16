@@ -52,12 +52,16 @@ async function startServer() {
       const MAYAR_WEBHOOK_TOKEN = process.env.MAYAR_WEBHOOK_TOKEN;
       const token = req.headers['x-callback-token'];
 
+      const payload = req.body;
+      const event = payload.event;
+
+      if (event === 'testing') {
+        return res.status(200).json({ success: true, message: 'Test webhook received' });
+      }
+
       if (MAYAR_WEBHOOK_TOKEN && token !== MAYAR_WEBHOOK_TOKEN) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
-      const payload = req.body;
-      const event = payload.event;
       const data = payload.data;
 
       if (event !== 'payment.success') {
