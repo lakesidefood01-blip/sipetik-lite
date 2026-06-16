@@ -48,24 +48,19 @@ export default function Pricing() {
     
     setLoading(true);
     try {
-      // Create session to Mayar.id via our backend
-      const response = await fetch('/api/payment/create-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id }),
-      });
+      // Karena aplikasi dihosting static (Static Site Generation / SPA),
+      // kita alihkan langsung ke URL pembayaran Mayar (Static Link).
+      // Pastikan untuk mengganti VITE_MAYAR_PAYMENT_URL di .env dengan URL produk Mayar asli Anda.
+      const mayarPaymentUrl = import.meta.env.VITE_MAYAR_PAYMENT_URL || 'https://checkout.mayar.id/demo';
       
-      const data = await response.json();
+      // Tambahkan referensi user.id agar webhook nanti tahu ini pembayaran siapa.
+      // Format parameter bisa disesuaikan dengan dokumentasi Mayar (misalnya ?ref= atau ?custom_field=)
+      const finalUrl = `${mayarPaymentUrl}?ref=${user.id}`;
       
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error(data.error || 'Failed to create payment session');
-      }
+      window.location.href = finalUrl;
     } catch (e) {
       console.error(e);
-      // Fallback for demo if backend isn't set up yet
-      alert('Integrasi Mayar sedang dalam tahap pengembangan. Aksi ini akan menuju halaman checkout Mayar.');
+      alert('Terjadi kesalahan saat mengarahkan ke halaman pembayaran.');
     } finally {
       setLoading(false);
     }

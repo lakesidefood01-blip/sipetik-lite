@@ -280,7 +280,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <AreaChart data={chartsData.growth}>
                   <defs>
                     <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
@@ -318,18 +318,18 @@ export default function Dashboard() {
                     <div className="flex gap-4 items-center">
                       <div className={cn(
                         "h-10 w-10 flex items-center justify-center rounded-full text-white shrink-0",
-                        item.kategori === 'Vaksin' ? "bg-rose-500" : item.kategori === 'Vitamin' ? "bg-cyan-500" : "bg-amber-500"
+                        item.jenis === 'Vaksin' ? "bg-rose-500" : item.jenis === 'Vitamin' ? "bg-cyan-500" : "bg-amber-500"
                       )}>
                         <Activity className="h-5 w-5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-semibold text-sm truncate">{item.tindakan}</p>
-                        <p className="text-xs text-muted-foreground truncate">{item.sapi?.nama || 'Unknown Sapi'}</p>
+                        <p className="font-semibold text-sm truncate">{item.catatan || item.jenis}</p>
+                        <p className="text-xs text-muted-foreground truncate">{item.sapi?.nama_sapi || 'Unknown Sapi'}</p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-sm font-bold">{new Date(item.tanggal_rencana).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase font-medium">{item.kategori}</p>
+                      <p className="text-sm font-bold">{new Date(item.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-medium">{item.jenis}</p>
                     </div>
                   </div>
                 ))
@@ -358,7 +358,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="h-[250px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={chartsData.feedWeekly}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
