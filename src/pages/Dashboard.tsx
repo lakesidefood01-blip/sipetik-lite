@@ -77,16 +77,16 @@ export default function Dashboard() {
 
         const { data: finances } = await supabase
           .from('transaksi_keuangan')
-          .select('jumlah, tipe, kategori, tanggal')
+          .select('nominal, tipe, kategori, tanggal')
           .eq('user_id', user.id);
 
         let totalExp = 0;
         let feedMonth = 0;
         finances?.forEach(f => {
-          if (f.tipe === 'Pengeluaran') {
-            totalExp += f.jumlah;
+          if (f.tipe === 'pengeluaran') {
+            totalExp += f.nominal;
             if (f.kategori === 'Pakan' && new Date(f.tanggal) >= startOfMonth) {
-              feedMonth += f.jumlah;
+              feedMonth += f.nominal;
             }
           }
         });
@@ -94,23 +94,21 @@ export default function Dashboard() {
         // 3. Health Reminders
         const { data: health } = await supabase
           .from('kesehatan')
-          .select('*, sapi(nama)')
-          .eq('user_id', user.id)
-          .eq('status', 'Pending')
-          .order('tanggal_rencana', { ascending: true })
+          .select('*, sapi(nama_sapi)')
+          .eq('status', 'pending')
+          .order('tanggal', { ascending: true })
           .limit(3);
 
         const { count: pendingHealthCount } = await supabase
           .from('kesehatan')
           .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id)
-          .eq('status', 'Pending');
+          .eq('status', 'pending');
 
         // 4. ADG Calculation & Growth Chart
         const { data: weights } = await supabase
           .from('berat_badan')
-          .select('*, sapi(nama, id_sapi)')
-          .order('tanggal_timbang', { ascending: true });
+          .select('*, sapi(nama_sapi, kode_sapi)')
+          .order('tanggal', { ascending: true });
 
         // Group by sapi for ADG
         const sapiWeights: Record<string, any[]> = {};
@@ -129,15 +127,15 @@ export default function Dashboard() {
             const first = wList[0];
             const last = wList[wList.length - 1];
             const weightDiff = last.berat - first.berat;
-            const daysDiff = (new Date(last.tanggal_timbang).getTime() - new Date(first.tanggal_timbang).getTime()) / (1000 * 3600 * 24);
+            const daysDiff = (new Date(last.tanggal).getTime() - new Date(first.tanggal).getTime()) / (1000 * 3600 * 24);
             
             if (daysDiff > 0) {
                 const adg = weightDiff / daysDiff;
                 totalAdg += adg;
                 adgCount++;
                 performers.push({
-                  name: last.sapi.nama,
-                  id: last.sapi.id_sapi,
+                  name: last.sapi?.nama_sapi || 'Sapi',
+                  id: last.sapi?.kode_sapi || '',
                   weight: `+${adg.toFixed(1)}kg`,
                   adgVal: adg
                 });
@@ -148,7 +146,7 @@ export default function Dashboard() {
         // Growth Chart Data from weights
         const dailyWeights: Record<string, { total: number, count: number }> = {};
         weights?.forEach(w => {
-          const date = new Date(w.tanggal_timbang).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+          const date = new Date(w.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
           if (!dailyWeights[date]) dailyWeights[date] = { total: 0, count: 0 };
           dailyWeights[date].total += w.berat;
           dailyWeights[date].count += 1;
@@ -166,8 +164,8 @@ export default function Dashboard() {
             const week = Math.ceil(new Date(curr.tanggal).getDate() / 7);
             const weekLabel = `Minggu ${week}`;
             const existing = acc.find(a => a.name === weekLabel);
-            if (existing) existing.cost += curr.jumlah;
-            else acc.push({ name: weekLabel, cost: curr.jumlah });
+            if (existing) existing.cost += curr.nominal;
+            else acc.push({ name: weekLabel, cost: curr.nominal });
             return acc;
           }, []) || [];
 
