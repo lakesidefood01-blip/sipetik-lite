@@ -24,6 +24,7 @@ const BillingFailed = lazy(() => import('@/src/pages/BillingFailed'));
 
 // Layout
 import AppLayout from '@/src/components/layout/AppLayout';
+import MemberGuard from '@/src/components/layout/MemberGuard';
 
 // Seamless Loading Fallback component for Suspense chunks
 function PerformancePageLoader() {
@@ -106,10 +107,13 @@ export default function App() {
             <Route path="/sapi/new" element={<SapiForm />} />
             <Route path="/sapi/edit/:id" element={<SapiForm />} />
             <Route path="/sapi/:id" element={<SapiDetail />} />
-            <Route path="/pakan" element={<Pakan />} />
-            <Route path="/berat" element={<Berat />} />
-            <Route path="/keuangan" element={<Keuangan />} />
-            <Route path="/kesehatan" element={<Kesehatan />} />
+            
+            {/* Premium Features Protected by MemberGuard */}
+            <Route path="/pakan" element={<MemberGuard><Pakan /></MemberGuard>} />
+            <Route path="/berat" element={<MemberGuard><Berat /></MemberGuard>} />
+            <Route path="/keuangan" element={<MemberGuard><Keuangan /></MemberGuard>} />
+            <Route path="/kesehatan" element={<MemberGuard><Kesehatan /></MemberGuard>} />
+            
             <Route path="/billing" element={<Billing />} />
             <Route path="/billing/success" element={<BillingSuccess />} />
             <Route path="/billing/failed" element={<BillingFailed />} />

@@ -1,14 +1,12 @@
 export type PlanType = 'free' | 'pro';
-export type SubscriptionStatus = 'active' | 'inactive' | 'past_due' | 'canceled' | 'unpaid';
 
 export type UserProfile = {
   id: string;
   full_name: string | null;
   avatar_url: string | null;
-  plan_type?: PlanType;
-  subscription_status?: SubscriptionStatus;
-  subscription_started_at?: string | null;
-  subscription_expired_at?: string | null;
+  membership_status?: 'free' | 'active' | 'expired';
+  membership_start?: string | null;
+  membership_end?: string | null;
   mayar_customer_id?: string | null;
   updated_at: string;
 };

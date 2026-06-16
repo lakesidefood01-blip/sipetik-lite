@@ -47,21 +47,108 @@ async function startServer() {
   });
 
   // Webhook from Mayar
-  app.post("/api/webhooks/mayar", async (req, res) => {
+  app.post("/api/payment", async (req, res) => {
     try {
-      // 1. Verify Mayar signature
-      // const signature = req.headers['x-mayar-signature'];
-      // if (!verifySignature(signature, req.body)) return res.status(401).send('Invalid signature');
-      
-      const payload = req.body;
-      console.log('Received Mayar Webhook:', payload);
+      const MAYAR_WEBHOOK_TOKEN = process.env.MAYAR_WEBHOOK_TOKEN;
+      const token = req.headers['x-callback-token'];
 
-      if (payload.status === 'SUCCESS' || payload.event === 'payment_success') {
-        const userId = payload.customer_id; // Extract mapped ID
-        // updateSubscriptionService(userId, 'pro');
+      if (MAYAR_WEBHOOK_TOKEN && token !== MAYAR_WEBHOOK_TOKEN) {
+        return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      res.status(200).json({ received: true });
+      const payload = req.body;
+      const event = payload.event;
+      const data = payload.data;
+
+      if (event !== 'payment.success') {
+        return res.status(200).json({ skip: true });
+      }
+
+      const email = data?.customer?.email;
+      const amount = data?.amount;
+      const refId = data?.referenceId;
+
+      if (!email || !amount) {
+        return res.status(400).json({ error: 'Invalid payload' });
+      }
+
+      // Initialize Supabase to handle membership
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.VITE_SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase URL or Service Key missing");
+      }
+      
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      // 2. Idempotency check
+      const { data: existing } = await supabase
+        .from('membership_payments')
+        .select('id')
+        .eq('reference_id', refId)
+        .single();
+
+      if (existing) {
+        return res.status(200).json({ skip: 'already processed' });
+      }
+
+      // We will look up user by email since the markdown assumes there is email.
+      // Easiest is to look up auth.users using admin API
+      const { data: usersData, error: userError } = await supabase.auth.admin.listUsers();
+      
+      if (userError || !usersData || !usersData.users) {
+        return res.status(500).json({ error: 'Failed to retrieve auth users' });
+      }
+      
+      const foundUser = usersData.users.find((u: any) => u.email === email);
+      if (!foundUser) {
+        return res.status(404).json({ error: 'User not found in auth list' });
+      }
+
+      // 3. Ambil user profile parameters needed
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, membership_status, membership_end')
+        .eq('id', foundUser.id)
+        .single();
+        
+      if (!profile) {
+        return res.status(404).json({ error: 'User profile not found' });
+      }
+
+      // 4. Hitung periode membership
+      const { addMonths } = await import('date-fns');
+      const now = new Date();
+      const currentEnd = profile.membership_end ? new Date(profile.membership_end) : null;
+      const isStillActive = currentEnd && currentEnd > now;
+
+      const periodStart = isStillActive ? currentEnd : now;
+      const periodEnd = addMonths(periodStart, 1); // +1 bulan
+
+      // 5. Update membership
+      await supabase
+        .from('profiles')
+        .update({
+          membership_status: 'active',
+          membership_start: periodStart.toISOString(),
+          membership_end: periodEnd.toISOString(),
+        })
+        .eq('id', profile.id);
+
+      // 6. Catat pembayaran
+      await supabase.from('membership_payments').insert({
+        user_id: profile.id,
+        reference_id: refId,
+        amount,
+        period_start: periodStart.toISOString(),
+        period_end: periodEnd.toISOString(),
+      });
+
+      console.log(`Paket Pro diaktifkan untuk user: ${profile.id}`);
+      return res.status(200).json({ success: true });
+      
     } catch (error) {
       console.error('Webhook Error:', error);
       res.status(500).send('Webhook Error');

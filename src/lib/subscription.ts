@@ -4,7 +4,7 @@ export const FREE_PLAN_COW_LIMIT = 3;
 
 export function isActiveProPlan(profile: UserProfile | null): boolean {
   if (!profile) return false;
-  return profile.plan_type === 'pro' && profile.subscription_status === 'active';
+  return profile.membership_status === 'active';
 }
 
 export function canCreateCow(profile: UserProfile | null, currentCowCount: number): boolean {

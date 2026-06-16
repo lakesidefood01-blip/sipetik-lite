@@ -79,8 +79,8 @@ export default function Billing() {
               <div className="flex justify-between py-2 border-b">
                 <span className="text-slate-500">Masa Berlaku</span>
                 <span className="font-medium">
-                  {profile?.subscription_expired_at 
-                    ? new Date(profile.subscription_expired_at).toLocaleDateString('id-ID') 
+                  {profile?.membership_end 
+                    ? new Date(profile.membership_end).toLocaleDateString('id-ID') 
                     : 'Selamanya (Gratis)'}
                 </span>
               </div>
