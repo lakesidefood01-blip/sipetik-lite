@@ -109,10 +109,12 @@ export default function App() {
             <Route path="/sapi/:id" element={<SapiDetail />} />
             
             {/* Premium Features Protected by MemberGuard */}
-            <Route path="/pakan" element={<MemberGuard><Pakan /></MemberGuard>} />
-            <Route path="/berat" element={<MemberGuard><Berat /></MemberGuard>} />
-            <Route path="/keuangan" element={<MemberGuard><Keuangan /></MemberGuard>} />
-            <Route path="/kesehatan" element={<MemberGuard><Kesehatan /></MemberGuard>} />
+            <Route element={<MemberGuard />}>
+              <Route path="/pakan" element={<Pakan />} />
+              <Route path="/berat" element={<Berat />} />
+              <Route path="/keuangan" element={<Keuangan />} />
+              <Route path="/kesehatan" element={<Kesehatan />} />
+            </Route>
             
             <Route path="/billing" element={<Billing />} />
             <Route path="/billing/success" element={<BillingSuccess />} />

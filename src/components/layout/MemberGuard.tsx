@@ -1,8 +1,7 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useMembership } from '@/src/hooks/useMembership';
 
-export default function MemberGuard({ children }: { children: React.ReactNode }) {
+export default function MemberGuard() {
   const { isActive, loading } = useMembership();
 
   if (loading) {
@@ -17,5 +16,5 @@ export default function MemberGuard({ children }: { children: React.ReactNode })
     return <Navigate to="/pricing" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 }

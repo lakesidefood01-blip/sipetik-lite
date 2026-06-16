@@ -51,7 +51,7 @@ export default function Pricing() {
       // Karena aplikasi dihosting static (Static Site Generation / SPA),
       // kita alihkan langsung ke URL pembayaran Mayar (Static Link).
       // Pastikan untuk mengganti VITE_MAYAR_PAYMENT_URL di .env dengan URL produk Mayar asli Anda.
-      const mayarPaymentUrl = import.meta.env.VITE_MAYAR_PAYMENT_URL || 'https://checkout.mayar.id/demo';
+      const mayarPaymentUrl = import.meta.env.VITE_MAYAR_PAYMENT_URL || 'https://rizal-hakim.myr.id/m/membership-sipetik';
       
       // Tambahkan referensi user.id agar webhook nanti tahu ini pembayaran siapa.
       // Format parameter bisa disesuaikan dengan dokumentasi Mayar (misalnya ?ref= atau ?custom_field=)

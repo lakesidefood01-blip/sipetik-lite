@@ -3,7 +3,7 @@ import { supabase } from '@/src/lib/supabase';
 import { useAppStore } from '@/src/store/useAppStore';
 
 export function useMembership() {
-  const { user } = useAppStore();
+  const user = useAppStore((state) => state.user);
   const [status, setStatus] = useState<'free' | 'active' | 'expired'>('free');
   const [expDate, setExpDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
