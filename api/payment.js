@@ -2,7 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import { addMonths } from 'date-fns';
 
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-callback-token');
@@ -41,7 +40,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid payload: missing email or amount' });
     }
 
-    // 4. Init Supabase dengan Service Role Key
+    // 4. Init Supabase
     const supabaseUrl = process.env.VITE_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -51,25 +50,35 @@ export default async function handler(req, res) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 5. Cari user by email
-    const { data: usersData, error: userError } = await supabase.auth.admin.listUsers();
-    if (userError) return res.status(500).json({ error: 'Failed to fetch users' });
+    // 5. Idempotency check — cegah double aktivasi jika webhook dikirim 2x oleh Mayar
+    if (refId) {
+      const { data: existing } = await supabase
+        .from('membership_payments')
+        .select('id')
+        .eq('reference_id', refId)
+        .maybeSingle();
 
-    const foundUser = usersData?.users?.find(u => u.email === email);
-    if (!foundUser) {
-      console.log('User not found:', email);
-      return res.status(200).json({ success: true, message: 'User not found, skipping' });
+      if (existing) {
+        console.log(`Webhook duplikat diabaikan. reference_id: ${refId}`);
+        return res.status(200).json({ skip: true, message: 'Already processed' });
+      }
     }
 
-    // 6. Ambil profile
-    const { data: profile } = await supabase
+    // 6. Cari user langsung by email di tabel profiles
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id, membership_status, membership_end')
-      .eq('id', foundUser.id)
-      .single();
+      .eq('email', email)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Profile query error:', profileError);
+      return res.status(500).json({ error: 'Failed to query profile' });
+    }
 
     if (!profile) {
-      return res.status(200).json({ success: true, message: 'Profile not found, skipping' });
+      console.log('User tidak ditemukan:', email);
+      return res.status(200).json({ success: true, message: 'User not found, skipping' });
     }
 
     // 7. Hitung periode membership
@@ -79,8 +88,8 @@ export default async function handler(req, res) {
     const periodStart = isStillActive ? currentEnd : now;
     const periodEnd = addMonths(periodStart, 1);
 
-    // 8. Update membership
-    await supabase
+    // 8. Update membership di profiles
+    const { error: updateError } = await supabase
       .from('profiles')
       .update({
         membership_status: 'active',
@@ -89,16 +98,28 @@ export default async function handler(req, res) {
       })
       .eq('id', profile.id);
 
-    // 9. Catat transaksi
-    await supabase.from('membership_payments').insert({
-      user_id: profile.id,
-      reference_id: refId,
-      amount,
-      period_start: periodStart.toISOString(),
-      period_end: periodEnd.toISOString(),
-    });
+    if (updateError) {
+      console.error('Update profile error:', updateError);
+      return res.status(500).json({ error: 'Failed to update membership' });
+    }
 
-    console.log(`Membership aktif untuk: ${profile.id}`);
+    // 9. Catat transaksi pembayaran
+    const { error: insertError } = await supabase
+      .from('membership_payments')
+      .insert({
+        user_id: profile.id,
+        reference_id: refId,
+        amount,
+        period_start: periodStart.toISOString(),
+        period_end: periodEnd.toISOString(),
+      });
+
+    if (insertError) {
+      console.error('Insert payment error:', insertError);
+      // Tidak return error — membership sudah terupdate, catat saja di log
+    }
+
+    console.log(`Membership aktif untuk: ${profile.id} | s/d: ${periodEnd.toISOString()}`);
     return res.status(200).json({ success: true });
 
   } catch (err) {
