@@ -1,17 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppStore } from '@/src/store/useAppStore';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/src/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { isActiveProPlan } from '@/src/lib/subscription';
 import { Badge } from '@/src/components/ui/badge';
-import { Zap, ShieldCheck } from 'lucide-react';
+import { Zap, ShieldCheck, Loader2 } from 'lucide-react';
+import { supabase } from '@/src/lib/supabase';
+
+interface PaymentHistory {
+  id: string;
+  reference_id: string;
+  amount: number;
+  period_start: string;
+  period_end: string;
+  created_at: string;
+}
 
 export default function Billing() {
-  const { profile } = useAppStore();
+  const { profile, user } = useAppStore();
   const navigate = useNavigate();
-  
   const isPro = isActiveProPlan(profile);
+
+  const [payments, setPayments] = useState<PaymentHistory[]>([]);
+  const [loadingPayments, setLoadingPayments] = useState(true);
 
   useEffect(() => {
     document.title = 'Langganan & Tagihan | SIPETIK Lite';
@@ -28,7 +40,7 @@ export default function Billing() {
     setMetaTag('description', 'Kelola paket langganan dan integrasi pembayaran SIPETIK Lite Anda.');
     setMetaTag('og:title', 'Billing - SIPETIK Lite');
     setMetaTag('twitter:card', 'summary');
-    
+
     let canonical = document.querySelector(`link[rel="canonical"]`);
     if (!canonical) {
       canonical = document.createElement('link');
@@ -37,6 +49,40 @@ export default function Billing() {
     }
     canonical.setAttribute('href', window.location.origin + '/billing');
   }, []);
+
+  // Fetch riwayat pembayaran dari Supabase
+  useEffect(() => {
+    const fetchPayments = async () => {
+      if (!user) {
+        setLoadingPayments(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('membership_payments')
+          .select('id, reference_id, amount, period_start, period_end, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (!error && data) {
+          setPayments(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch payment history', err);
+      } finally {
+        setLoadingPayments(false);
+      }
+    };
+
+    fetchPayments();
+  }, [user]);
+
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
     <div className="space-y-8">
@@ -49,9 +95,9 @@ export default function Billing() {
         {/* Current Plan Card */}
         <Card className="border-none shadow-sm overflow-hidden relative">
           {isPro && (
-             <div className="absolute top-0 right-0 py-1 px-3 bg-emerald-500 text-white text-[10px] font-bold rounded-bl-lg uppercase tracking-wider">
-               Active
-             </div>
+            <div className="absolute top-0 right-0 py-1 px-3 bg-emerald-500 text-white text-[10px] font-bold rounded-bl-lg uppercase tracking-wider">
+              Active
+            </div>
           )}
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
@@ -74,13 +120,13 @@ export default function Billing() {
                 {isPro ? "Aktif" : "Dasar"}
               </Badge>
             </div>
-            
+
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-2 border-b">
                 <span className="text-slate-500">Masa Berlaku</span>
                 <span className="font-medium">
-                  {profile?.membership_end 
-                    ? new Date(profile.membership_end).toLocaleDateString('id-ID') 
+                  {profile?.membership_end
+                    ? formatDate(profile.membership_end)
                     : 'Selamanya (Gratis)'}
                 </span>
               </div>
@@ -91,17 +137,20 @@ export default function Billing() {
             </div>
 
             {!isPro && (
-              <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2" 
+              <Button
+                className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
                 onClick={() => navigate('/pricing')}
               >
                 <Zap className="h-4 w-4" /> Upgrade ke Pro
               </Button>
             )}
             {isPro && (
-               <Button variant="outline" className="w-full text-slate-600">
-                 Perpanjang Paket
-               </Button>
+              <Button
+                className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+                onClick={() => navigate('/pricing')}
+              >
+                <Zap className="h-4 w-4" /> Perpanjang Paket
+              </Button>
             )}
           </CardContent>
         </Card>
@@ -113,9 +162,35 @@ export default function Billing() {
             <CardDescription>Riwayat tagihan langganan Anda.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-12">
-              <p className="text-sm text-slate-500">Belum ada riwayat transaksi pembayaran.</p>
-            </div>
+            {loadingPayments ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+              </div>
+            ) : payments.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-sm text-slate-500">Belum ada riwayat transaksi pembayaran.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {payments.map((payment) => (
+                  <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-slate-700">Paket Pro — 1 Bulan</p>
+                      <p className="text-xs text-slate-500">
+                        {formatDate(payment.period_start)} – {formatDate(payment.period_end)}
+                      </p>
+                      <p className="text-xs text-slate-400">Ref: {payment.reference_id}</p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p className="text-sm font-bold text-slate-800">{formatCurrency(payment.amount)}</p>
+                      <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 text-xs">
+                        Berhasil
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
