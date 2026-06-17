@@ -108,9 +108,9 @@ export default function Billing() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="p-4 rounded-xl bg-slate-50 border flex items-center justify-between">
+            <div className="p-4 rounded-xl bg-muted/50 border flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Current Plan</p>
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Current Plan</p>
                 <div className="flex items-center gap-2 mt-1">
                   <h3 className="text-2xl font-black">{isPro ? 'PRO PLAN' : 'FREE PLAN'}</h3>
                   {isPro && <ShieldCheck className="h-5 w-5 text-emerald-500" />}
@@ -122,16 +122,16 @@ export default function Billing() {
             </div>
 
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-slate-500">Masa Berlaku</span>
+              <div className="flex justify-between py-2 border-b border-border/50">
+                <span className="text-muted-foreground">Masa Berlaku</span>
                 <span className="font-medium">
                   {profile?.membership_end
                     ? formatDate(profile.membership_end)
                     : 'Selamanya (Gratis)'}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-slate-500">Batas Kuota Sapi</span>
+              <div className="flex justify-between py-2 border-b border-border/50">
+                <span className="text-muted-foreground">Batas Kuota Sapi</span>
                 <span className="font-medium">{isPro ? 'Unlimited' : '3 Ekor'}</span>
               </div>
             </div>
@@ -168,22 +168,22 @@ export default function Billing() {
               </div>
             ) : payments.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-sm text-slate-500">Belum ada riwayat transaksi pembayaran.</p>
+                <p className="text-sm text-muted-foreground">Belum ada riwayat transaksi pembayaran.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {payments.map((payment) => (
-                  <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border">
+                  <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-slate-700">Paket Pro — 1 Bulan</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-sm font-semibold text-foreground">Paket Pro — 1 Bulan</p>
+                      <p className="text-xs text-muted-foreground">
                         {formatDate(payment.period_start)} – {formatDate(payment.period_end)}
                       </p>
-                      <p className="text-xs text-slate-400">Ref: {payment.reference_id}</p>
+                      <p className="text-xs text-muted-foreground/70">Ref: {payment.reference_id}</p>
                     </div>
                     <div className="text-right space-y-1">
-                      <p className="text-sm font-bold text-slate-800">{formatCurrency(payment.amount)}</p>
-                      <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 text-xs">
+                      <p className="text-sm font-bold text-foreground">{formatCurrency(payment.amount)}</p>
+                      <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20 text-xs">
                         Berhasil
                       </Badge>
                     </div>
