@@ -148,7 +148,7 @@ export default function SapiDetail() {
         {/* Content Tabs */}
         <div className="lg:col-span-2">
           <Tabs defaultValue="growth" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 rounded-xl bg-white p-1 border shadow-sm">
+            <TabsList className="grid w-full grid-cols-4 rounded-xl bg-card p-1 border shadow-sm">
               <TabsTrigger value="growth" className="rounded-lg">Pertumbuhan</TabsTrigger>
               <TabsTrigger value="feed" className="rounded-lg">Pakan</TabsTrigger>
               <TabsTrigger value="health" className="rounded-lg">Kesehatan</TabsTrigger>
@@ -156,7 +156,7 @@ export default function SapiDetail() {
             </TabsList>
 
             <TabsContent value="growth" className="mt-4 animate-in fade-in slide-in-from-bottom-2">
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2 font-bold">
                     <TrendingUp className="h-5 w-5 text-primary" />
@@ -183,7 +183,7 @@ export default function SapiDetail() {
             </TabsContent>
 
             <TabsContent value="feed" className="mt-4">
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2 font-bold">
                     <Utensils className="h-5 w-5 text-primary" />
@@ -210,7 +210,7 @@ export default function SapiDetail() {
             </TabsContent>
 
             <TabsContent value="health" className="mt-4">
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2 font-bold">
                     <Stethoscope className="h-5 w-5 text-red-500" />
@@ -240,7 +240,7 @@ export default function SapiDetail() {
             </TabsContent>
 
             <TabsContent value="notes" className="mt-4">
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
                   <CardTitle className="text-lg font-bold">Catatan Khusus</CardTitle>
                 </CardHeader>

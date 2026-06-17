@@ -271,7 +271,7 @@ export default function Dashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Main Chart */}
-        <Card className="col-span-full lg:col-span-4 shadow-sm border-none bg-white">
+        <Card className="col-span-full lg:col-span-4 shadow-sm border-none bg-card">
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
               <Activity className="h-5 w-5 text-primary" />
@@ -302,7 +302,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Side Widget - Health Reminders */}
-        <Card className="col-span-full lg:col-span-3 shadow-sm border-none bg-white">
+        <Card className="col-span-full lg:col-span-3 shadow-sm border-none bg-card">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl flex items-center gap-2">
               <HeartPulse className="h-5 w-5 text-rose-500" />
@@ -349,7 +349,7 @@ export default function Dashboard() {
 
       {/* Second Row Charts */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-full lg:col-span-3 shadow-sm border-none bg-white">
+        <Card className="col-span-full lg:col-span-3 shadow-sm border-none bg-card">
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
               <Wallet className="h-5 w-5 text-emerald-500" />
@@ -375,7 +375,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-full lg:col-span-4 shadow-sm border-none bg-white">
+        <Card className="col-span-full lg:col-span-4 shadow-sm border-none bg-card">
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
               <Scale className="h-5 w-5 text-primary" />
@@ -426,7 +426,7 @@ function StatCard({ title, value, icon: Icon, trend, color }: { title: string, v
   const isDown = trend.toLowerCase().includes('down');
   
   return (
-    <Card className="overflow-hidden border-none shadow-sm bg-white">
+    <Card className="overflow-hidden border-none shadow-sm bg-card">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>

@@ -251,7 +251,7 @@ export default function Keuangan() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white">
+        <Card className="border-none shadow-sm bg-card">
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <div>
@@ -264,7 +264,7 @@ export default function Keuangan() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white">
+        <Card className="border-none shadow-sm bg-card">
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <div>

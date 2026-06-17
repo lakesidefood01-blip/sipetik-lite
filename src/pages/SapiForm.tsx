@@ -103,7 +103,7 @@ export default function SapiForm() {
         <h1 className="text-2xl font-bold">{isEdit ? 'Ubah Data Sapi' : 'Tambah Sapi Baru'}</h1>
       </div>
 
-      <Card className="border-none shadow-sm bg-white">
+      <Card className="border-none shadow-sm bg-card">
         <CardHeader>
           <CardTitle>Informasi Dasar</CardTitle>
         </CardHeader>
