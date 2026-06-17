@@ -23,7 +23,9 @@ export default function Header() {
     await supabase.auth.signOut();
   };
 
-  const userInitial = user?.email?.[0].toUpperCase() || 'U';
+  // Pakai full_name dari profile, fallback ke email kalau belum diisi user
+  const displayName = profile?.full_name || user?.email?.split('@')[0] || 'User';
+  const userInitial = (profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:px-6">
@@ -35,7 +37,7 @@ export default function Header() {
       <div className="hidden md:block">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold capitalize">
-            Selamat Datang, {user?.email?.split('@')[0]}
+            Selamat Datang, {displayName}
           </h2>
           <Badge variant={isActiveProPlan(profile) ? "default" : "secondary"} className={isActiveProPlan(profile) ? "bg-emerald-600 hover:bg-emerald-700" : ""}>
              {isActiveProPlan(profile) ? 'PRO' : 'FREE'}
@@ -54,7 +56,7 @@ export default function Header() {
             render={
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 text-xs">
-                  <AvatarImage src="" alt={user?.email || ""} />
+                  <AvatarImage src="" alt={displayName} />
                   <AvatarFallback>{userInitial}</AvatarFallback>
                 </Avatar>
               </Button>
@@ -63,7 +65,7 @@ export default function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user?.email?.split('@')[0]}</p>
+                <p className="text-sm font-medium leading-none">{displayName}</p>
                 <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
               </div>
             </DropdownMenuLabel>

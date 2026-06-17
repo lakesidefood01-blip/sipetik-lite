@@ -9,22 +9,79 @@ import { User, Shield, Bell, Moon, LogOut, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Settings() {
-  const { user } = useAppStore();
+  const { user, profile: storeProfile, setProfile: setStoreProfile } = useAppStore();
   const [loading, setLoading] = useState(false);
+  const [fetchingProfile, setFetchingProfile] = useState(true);
   const [profile, setProfile] = useState({
     email: user?.email || '',
     fullName: '',
   });
 
+  // Ambil full_name dari Supabase saat halaman dibuka
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user) {
+        setFetchingProfile(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('full_name, email')
+          .eq('id', user.id)
+          .single();
+
+        if (!error && data) {
+          setProfile({
+            email: data.email || user.email || '',
+            fullName: data.full_name || '',
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile', err);
+      } finally {
+        setFetchingProfile(false);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      toast.error('Sesi tidak ditemukan, silakan login ulang.');
+      return;
+    }
+
     setLoading(true);
-    
-    // In a real app, you'd update the profiles table
-    setTimeout(() => {
-      setLoading(false);
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ full_name: profile.fullName })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Update profile error:', error);
+        toast.error('Gagal memperbarui profil.');
+        return;
+      }
+
+      // Sync ke global store agar nama langsung update di seluruh app (misal navbar)
+      if (storeProfile) {
+        setStoreProfile({ ...storeProfile, full_name: profile.fullName });
+      }
+
       toast.success('Profil berhasil diperbarui!');
-    }, 1000);
+    } catch (err) {
+      console.error('Update profile error:', err);
+      toast.error('Terjadi kesalahan saat menyimpan profil.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -56,14 +113,15 @@ export default function Settings() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="fullName">Nama Lengkap</Label>
-                <Input 
-                  id="fullName" 
-                  placeholder="Nama Lengkap Anda" 
+                <Input
+                  id="fullName"
+                  placeholder="Nama Lengkap Anda"
                   value={profile.fullName}
-                  onChange={(e) => setProfile({...profile, fullName: e.target.value})}
+                  onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
+                  disabled={fetchingProfile}
                 />
               </div>
-              <Button type="submit" className="w-full gap-2" disabled={loading}>
+              <Button type="submit" className="w-full gap-2" disabled={loading || fetchingProfile}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                 Simpan Perubahan
               </Button>
