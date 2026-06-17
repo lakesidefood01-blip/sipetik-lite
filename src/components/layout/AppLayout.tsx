@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import MobileNav from './MobileNav';
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function AppLayout() {
   const { isSidebarOpen } = useAppStore();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -25,7 +26,7 @@ export default function AppLayout() {
         <main className="flex-1 pb-20 p-4 md:p-6 lg:p-8 md:pb-8">
           <AnimatePresence mode="wait">
             <motion.div
-              key={window.location.pathname}
+              key={location.pathname}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
