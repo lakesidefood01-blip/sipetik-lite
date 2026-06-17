@@ -26,15 +26,21 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, message: 'Test received' });
     }
 
-    // 3. Skip event selain payment.success
-    if (event !== 'payment.success') {
-      return res.status(200).json({ skip: true, message: 'Event ignored' });
+    const data = payload.data || {};
+
+    // 3. Terima beberapa variasi nama event sukses dari Mayar
+    // Mayar bisa mengirim "payment.success" atau "payment.received"
+    // tergantung jenis produk (single payment vs membership)
+    const successEvents = ['payment.success', 'payment.received'];
+
+    if (!successEvents.includes(event) || data.status !== 'SUCCESS') {
+      console.log(`Event diabaikan: ${event}, status: ${data.status}`);
+      return res.status(200).json({ skip: true, message: 'Event ignored or not successful' });
     }
 
-    const data = payload.data || {};
     const email = data.customerEmail || data?.customer?.email;
     const amount = data.amount;
-    const refId = data.referenceId || data.id;
+    const refId = data.referenceId || data.transactionId || data.id;
 
     if (!email || !amount) {
       return res.status(400).json({ error: 'Invalid payload: missing email or amount' });
