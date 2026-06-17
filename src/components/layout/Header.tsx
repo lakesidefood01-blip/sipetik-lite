@@ -52,16 +52,12 @@ export default function Header() {
         </Button>
 
         <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8 text-xs">
-                  <AvatarImage src="" alt={displayName} />
-                  <AvatarFallback>{userInitial}</AvatarFallback>
-                </Avatar>
-              </Button>
-            }
-          />
+          <DropdownMenuTrigger className="relative h-8 w-8 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <Avatar className="h-8 w-8 text-xs hover:opacity-80 transition-opacity">
+              <AvatarImage src="" alt={displayName} />
+              <AvatarFallback>{userInitial}</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">

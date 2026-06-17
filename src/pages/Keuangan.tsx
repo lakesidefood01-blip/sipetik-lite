@@ -141,11 +141,9 @@ export default function Keuangan() {
           <p className="text-muted-foreground">Kelola arus kas, laba rugi, dan biaya operasional.</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger render={
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> Catat Transaksi
-            </Button>
-          } />
+          <DialogTrigger className="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 gap-2">
+            <Plus className="h-4 w-4" /> Catat Transaksi
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Tambah Transaksi Baru</DialogTitle>

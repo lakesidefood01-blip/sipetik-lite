@@ -182,11 +182,9 @@ export default function SapiList() {
                   <TableCell>{item.tanggal_beli ? new Date(item.tanggal_beli).toLocaleDateString('id-ID') : '-'}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger render={
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      } />
+                      <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <MoreVertical className="h-4 w-4" />
+                      </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/sapi/${item.id}`)}>
                           <Eye className="mr-2 h-4 w-4" /> Lihat Detail
