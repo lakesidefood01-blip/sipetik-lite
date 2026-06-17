@@ -39,8 +39,18 @@ function PerformancePageLoader() {
 }
 
 export default function App() {
-  const { setUser, user, setProfile } = useAppStore();
+  const { setUser, user, setProfile, theme } = useAppStore();
   const [loading, setLoading] = useState(true);
+
+  // Handle theme changes
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
 
   useEffect(() => {
     const fetchProfileData = async (sessionUser: any) => {

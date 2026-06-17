@@ -10,6 +10,8 @@ interface AppState {
   isSidebarOpen: boolean;
   setSidebarOpen: (isOpen: boolean) => void;
   toggleSidebar: () => void;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -20,4 +22,9 @@ export const useAppStore = create<AppState>((set) => ({
   isSidebarOpen: true,
   setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  theme: (localStorage.getItem('vite-ui-theme') as 'light' | 'dark') || 'light',
+  setTheme: (theme) => {
+    localStorage.setItem('vite-ui-theme', theme);
+    set({ theme });
+  },
 }));

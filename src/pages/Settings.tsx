@@ -9,12 +9,17 @@ import { User, Shield, Bell, Moon, LogOut, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Settings() {
-  const { user, profile: storeProfile, setProfile: setStoreProfile } = useAppStore();
+  const { user, profile: storeProfile, setProfile: setStoreProfile, theme, setTheme } = useAppStore();
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(true);
+  const [passwordLoading, setPasswordLoading] = useState(false);
   const [profile, setProfile] = useState({
     email: user?.email || '',
     fullName: '',
+  });
+  const [passwords, setPasswords] = useState({
+    newPassword: '',
+    confirmPassword: '',
   });
 
   // Ambil full_name dari Supabase saat halaman dibuka
@@ -84,6 +89,33 @@ export default function Settings() {
     }
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwords.newPassword.length < 6) {
+      toast.error('Password minimal 6 karakter');
+      return;
+    }
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      toast.error('Konfirmasi password tidak cocok');
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: passwords.newPassword });
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success('Password berhasil diperbarui');
+        setPasswords({ newPassword: '', confirmPassword: '' });
+      }
+    } catch (err: any) {
+      toast.error(err?.message || 'Gagal mengubah password');
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
@@ -135,18 +167,33 @@ export default function Settings() {
               <Shield className="h-5 w-5 text-primary" />
               <CardTitle>Keamanan</CardTitle>
             </div>
-            <CardDescription>Ubah kata sandi dan autentikasi.</CardDescription>
+            <CardDescription>Ubah kata sandi akun Anda.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-             <div className="space-y-2">
-                <Label>Password Saat Ini</Label>
-                <Input type="password" />
-             </div>
-             <div className="space-y-2">
-                <Label>Password Baru</Label>
-                <Input type="password" />
-             </div>
-             <Button variant="outline" className="w-full">Ubah Password</Button>
+          <CardContent>
+            <form onSubmit={handleUpdatePassword} className="space-y-4">
+              <div className="space-y-2">
+                 <Label>Password Baru</Label>
+                 <Input 
+                   type="password" 
+                   value={passwords.newPassword}
+                   onChange={(e) => setPasswords({...passwords, newPassword: e.target.value})}
+                   disabled={passwordLoading}
+                 />
+              </div>
+              <div className="space-y-2">
+                 <Label>Konfirmasi Password</Label>
+                 <Input 
+                   type="password" 
+                   value={passwords.confirmPassword}
+                   onChange={(e) => setPasswords({...passwords, confirmPassword: e.target.value})}
+                   disabled={passwordLoading}
+                 />
+              </div>
+              <Button type="submit" variant="outline" className="w-full gap-2" disabled={passwordLoading}>
+                {passwordLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
+                Ubah Password
+              </Button>
+            </form>
           </CardContent>
         </Card>
 
@@ -190,7 +237,12 @@ export default function Settings() {
                     <p className="font-medium text-sm">Dark Mode</p>
                     <p className="text-xs text-muted-foreground">Gunakan tema gelap saat malam hari.</p>
                 </div>
-                <div className="h-6 w-10 rounded-full bg-muted relative"><div className="absolute left-1 top-1 h-4 w-4 rounded-full bg-white"></div></div>
+                <button 
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className={`h-6 w-10 min-w-10 rounded-full relative transition-colors ${theme === 'dark' ? 'bg-primary' : 'bg-muted border border-border/50'}`}
+                >
+                  <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all shadow-sm ${theme === 'dark' ? 'left-5' : 'left-1'}`}></div>
+                </button>
             </div>
           </CardContent>
           <CardFooter className="pt-6 border-t mt-4 flex justify-between items-center text-xs text-muted-foreground">
