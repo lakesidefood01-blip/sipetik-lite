@@ -249,6 +249,7 @@ export default function Landing() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]"
               >
+                <span className="sr-only">Aplikasi Manajemen Peternakan Sapi SIPETIK: </span>
                 Kelola Ternak Lebih <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Mudah</span>,<br />
                 Untung Makin <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Bertambah</span>
               </motion.h1>
@@ -259,7 +260,7 @@ export default function Landing() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               >
-                SIPETIK membantu peternak mencatat pakan harian, mengelola keuangan, mengawasi kesehatan, dan memonitor laju pertambahan berat sapi dalam satu sistem yang sangat praktis.
+                Aplikasi manajemen peternakan sapi SIPETIK membantu peternak mencatat pakan harian, mengelola keuangan, mengawasi kesehatan, dan memonitor laju pertambahan berat sapi dalam satu sistem yang sangat praktis.
               </motion.p>
 
               <motion.div 
@@ -438,7 +439,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Keuntungan SIPETIK</h2>
+            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Keuntungan Aplikasi Peternakan Sapi SIPETIK</h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Efisien, Cerdas & Menguntungkan</p>
             <p className="text-slate-500">Membantu peternakan beralih dari pencatatan tradisional yang berisiko berantakan ke sistem digital yang rapi dan terukur.</p>
           </div>
@@ -469,7 +470,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-20">
-            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Fitur Unggulan</h2>
+            <h2 className="text-xs font-bold text-emerald-800 uppercase tracking-widest">Fitur Unggulan Manajemen Peternakan Sapi</h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Semua Fitur Manajemen yang Anda Butuhkan</p>
             <p className="text-slate-500">Kami membuat peternakan modern menjadi sederhana dengan menyediakan solusi penuh dalam satu genggaman tangan.</p>
           </div>
